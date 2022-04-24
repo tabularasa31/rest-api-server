@@ -36,16 +36,15 @@ type Logger struct {
 	*logrus.Entry
 }
 
-func GetLogger() Logger {
-	return Logger{e}
+func GetLogger() *Logger {
+	return &Logger{e}
 }
 
-func (l *Logger) GetLoggerWithFields(k string, v interface{}) Logger { // если есть необходимость создать другой логгер с еще полем
-	return Logger{l.WithField(k, v)}
+func (l *Logger) GetLoggerWithFields(k string, v interface{}) *Logger { // если есть необходимость создать другой логгер с еще полем
+	return &Logger{l.WithField(k, v)}
 }
 
 // ---------------
-
 func init() {
 	l := logrus.New()
 	l.SetReportCaller(true) //sets whether the standard logger will include the calling method as a field
@@ -54,8 +53,8 @@ func init() {
 			filename := path.Base(frame.File)
 			return fmt.Sprintf("%s()", frame.Function), fmt.Sprintf("%s:%d", filename, frame.Line) // в какой функции происходит логирование и в какой строке
 		},
-		DisableColors: false, // Force disabling colors
-		FullTimestamp: true,  // Disable timestamp logging. useful when output is redirected to logging system that already adds timestamps.
+		//DisableColors: false, // Force disabling colors
+		FullTimestamp: true, // Disable timestamp logging. useful when output is redirected to logging system that already adds timestamps.
 	}
 	err := os.MkdirAll("logs", 0755)
 	if err != nil {
